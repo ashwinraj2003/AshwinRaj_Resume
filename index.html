@@ -46,10 +46,6 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
         
-        .sticky-header {
-            display: none;
-        }
-        
         .action-buttons {
             display: flex;
             align-items: center;
@@ -271,8 +267,6 @@
             color: #e0e0e0;
         }
         
-
-        
         .experience-item {
             margin-bottom: 20px;
         }
@@ -349,84 +343,86 @@
             color: #666;
         }
         
-        .project-item {
-            margin-bottom: 15px;
-        }
-        
-        .project-title {
-            font-size: 13px;
-            font-weight: bold;
-            color: #333;
-            transition: color 0.3s ease;
-        }
-        
-        body.dark .project-title {
-            color: #e0e0e0;
-        }
-        
-        .project-description {
-            font-size: 12px;
-            color: #666;
-            margin-top: 3px;
-            line-height: 1.4;
-        }
-        
-        .project-link {
-            font-size: 11px;
-            color: #0073e6;
-            text-decoration: underline;
-        }
-        
+        /* MINIMAL MOBILE ADJUSTMENTS - Only essential changes */
         @media (max-width: 768px) {
+            .container-content {
+                padding: 20px 15px;
+            }
+            
+            /* Slightly smaller text for mobile readability but keep layout */
+            .header-info h1 {
+                font-size: 22px;
+            }
+            
+            /* Make buttons slightly smaller for mobile */
+            .btn {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+            
+            /* Slightly reduce gaps */
+            .action-buttons {
+                gap: 12px;
+            }
+            
+            /* Keep grid but make it more mobile-friendly */
+            .contact-info {
+                font-size: 11px;
+                gap: 6px 12px;
+            }
+            
+            /* Smaller time display */
+            .time-display {
+                font-size: 13px;
+            }
+            
+            .time-display .time {
+                font-size: 15px;
+            }
+        }
+        
+        /* Very small screens - only then make minimal layout changes */
+        @media (max-width: 480px) {
             .header {
                 flex-direction: column;
+                align-items: center;
                 text-align: center;
             }
             
-            .header-left {
-                flex-direction: column;
-                align-items: center;
-                margin-bottom: 15px;
-            }
-            
-            .profile-pic {
-                margin: 0 auto 15px auto;
+            .action-buttons {
+                margin-top: 15px;
             }
             
             .contact-info {
                 grid-template-columns: 1fr;
-                gap: 8px;
                 text-align: left;
             }
-            
-            .action-buttons {
-                justify-content: center;
-                gap: 10px;
-            }
-            
-            .experience-header {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .education-item {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .time-display {
-                font-size: 12px;
-            }
-            
-            .time-display .time {
-                font-size: 14px;
-            }
-            
-            .btn {
-                width: 35px;
-                height: 35px;
-                font-size: 14px;
-            }
+        }
+        
+        .skills-grid {
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 15px; 
+            font-size: 12px; 
+            color: #666;
+        }
+        
+        .skills-column ul {
+            margin: 0; 
+            padding-left: 15px; 
+            line-height: 1.6;
+        }
+        
+        .languages-list {
+            font-size: 12px; 
+            color: #666; 
+            line-height: 1.6;
+        }
+        
+        .languages-list ul {
+            margin: 0; 
+            padding-left: 15px;
         }
         
         @media print {
@@ -453,7 +449,7 @@
             .section h2 {
                 color: black !important;
             }
-            .job-title, .education-info .degree, .project-title {
+            .job-title, .education-info .degree {
                 color: black !important;
             }
         }
@@ -461,13 +457,9 @@
 </head>
 <body>
     <div class="container">
-        <div class="sticky-header">
-        </div>
-        
         <div class="container-content">
             <div class="header">
                 <div class="header-left">
-                    <div class="profile-pic"></div>
                     <div class="header-info">
                         <h1>Ashwin Raj</h1>
                         <p class="role">
@@ -630,9 +622,9 @@
             <div class="section">
                 <h2>🛠️ Skills</h2>
                 
-                <div class="skills-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; font-size: 12px; color: #666;">
+                <div class="skills-grid">
                     <div class="skills-column">
-                        <ul style="margin: 0; padding-left: 15px; line-height: 1.6;">
+                        <ul>
                             <li>User Research</li>
                             <li>Information Architecture</li>
                             <li>Wireframing</li>
@@ -645,7 +637,7 @@
                         </ul>
                     </div>
                     <div class="skills-column">
-                        <ul style="margin: 0; padding-left: 15px; line-height: 1.6;">
+                        <ul>
                             <li>Interaction Design</li>
                             <li>High-Fidelity Design</li>
                             <li>Mobile-First Design</li>
@@ -658,7 +650,7 @@
                         </ul>
                     </div>
                     <div class="skills-column">
-                        <ul style="margin: 0; padding-left: 15px; line-height: 1.6;">
+                        <ul>
                             <li>Cross-Functional Communication</li>
                             <li>Collaboration</li>
                             <li>Client Presentations</li>
@@ -676,8 +668,8 @@
             <div class="section">
                 <h2>🗣️ Languages</h2>
                 
-                <div class="languages-list" style="font-size: 12px; color: #666; line-height: 1.6;">
-                    <ul style="margin: 0; padding-left: 15px;">
+                <div class="languages-list">
+                    <ul>
                         <li>Malayalam: Native Proficiency</li>
                         <li>English: Professional Proficiency</li>
                         <li>Hindi: Professional Proficiency</li>
