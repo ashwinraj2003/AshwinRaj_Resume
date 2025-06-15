@@ -386,12 +386,17 @@
         @media (max-width: 480px) {
             .header {
                 flex-direction: column;
-                align-items: center;
-                text-align: center;
+                align-items: flex-start; /* Keep left alignment */
+            }
+            
+            .header-info {
+                align-self: stretch; /* Take full width */
+                text-align: left; /* Ensure left alignment */
             }
             
             .action-buttons {
                 margin-top: 15px;
+                align-self: flex-end; /* Keep buttons on the right */
             }
             
             .contact-info {
