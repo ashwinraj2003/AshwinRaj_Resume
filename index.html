@@ -121,6 +121,7 @@
         .download-btn {
             background-color: #f5f5f5;
             color: #666;
+            font-size: 20px;
         }
         
         .download-btn:hover {
@@ -134,6 +135,13 @@
         
         body.dark .download-btn:hover {
             background-color: #4a4a4a;
+        }
+        
+        /* SVG icon for download button */
+        .download-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
         }
         
         .header {
@@ -502,8 +510,10 @@
                     <button class="btn theme-btn" onclick="toggleTheme()">
                         ☀
                     </button>
-                    <button class="btn download-btn" onclick="downloadResume()">
-                        📥
+                    <button class="btn download-btn" onclick="downloadResume()" title="Download Resume as PDF">
+                        <svg class="download-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 15.577l-3.539-3.538 1.061-1.061L11.5 13v-8h1v8l2.015-2.015 1.061 1.061L12 15.577zM5.5 20v-4.5h1V19h11v-3.5h1V20h-13z"/>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -728,10 +738,47 @@
             const actionButtons = document.querySelector('.action-buttons');
             actionButtons.style.display = 'none';
             
-            // Use browser's print functionality to save as PDF
-            window.print();
+            // Create a new window for PDF generation
+            const printWindow = window.open('', '_blank');
             
-            // Show action buttons again after a delay
+            // Copy the current page content to the new window
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>AshwinRaj_UXDesigner_Resume</title>
+                    <style>
+                        ${document.head.querySelector('style').innerHTML}
+                        body { background-color: white !important; color: black !important; padding: 20px !important; }
+                        .container { box-shadow: none !important; margin: 0 !important; padding: 20px !important; }
+                        .action-buttons { display: none !important; }
+                        .header { border-bottom: 1px solid #ddd !important; }
+                        .summary { background-color: #f8f8f8 !important; color: black !important; }
+                        .section h2 { color: black !important; }
+                        .job-title, .education-info .degree, .project-title { color: black !important; }
+                        @page { size: A4; margin: 20mm; }
+                    </style>
+                </head>
+                <body>
+                    ${document.querySelector('.container').innerHTML}
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            
+            // Wait for content to load, then trigger print
+            setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+                
+                // Close the window after printing
+                setTimeout(() => {
+                    printWindow.close();
+                }, 1000);
+            }, 500);
+            
+            // Show action buttons again
             setTimeout(() => {
                 actionButtons.style.display = 'flex';
             }, 1000);
