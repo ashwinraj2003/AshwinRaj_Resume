@@ -698,6 +698,10 @@
         </div>
     </div>
 
+    <!-- Load jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <script>
         // Update time display
         function updateTime() {
@@ -733,55 +737,112 @@
         }
 
         // Download resume as PDF
-        function downloadResume() {
-            // Hide action buttons temporarily for clean PDF
-            const actionButtons = document.querySelector('.action-buttons');
-            actionButtons.style.display = 'none';
-            
-            // Create a new window for PDF generation
-            const printWindow = window.open('', '_blank');
-            
-            // Copy the current page content to the new window
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>AshwinRaj_UXDesigner_Resume</title>
-                    <style>
-                        ${document.head.querySelector('style').innerHTML}
-                        body { background-color: white !important; color: black !important; padding: 20px !important; }
-                        .container { box-shadow: none !important; margin: 0 !important; padding: 20px !important; }
-                        .action-buttons { display: none !important; }
-                        .header { border-bottom: 1px solid #ddd !important; }
-                        .summary { background-color: #f8f8f8 !important; color: black !important; }
-                        .section h2 { color: black !important; }
-                        .job-title, .education-info .degree, .project-title { color: black !important; }
-                        @page { size: A4; margin: 20mm; }
-                    </style>
-                </head>
-                <body>
-                    ${document.querySelector('.container').innerHTML}
-                </body>
-                </html>
-            `);
-            
-            printWindow.document.close();
-            
-            // Wait for content to load, then trigger print
-            setTimeout(() => {
-                printWindow.focus();
-                printWindow.print();
+        async function downloadResume() {
+            try {
+                // Show loading state
+                const downloadBtn = document.querySelector('.download-btn');
+                const originalHTML = downloadBtn.innerHTML;
+                downloadBtn.innerHTML = '<div style="width: 18px; height: 18px; border: 2px solid #ccc; border-top: 2px solid #666; border-radius: 50%; animation: spin 1s linear infinite;"></div>';
+                downloadBtn.style.pointerEvents = 'none';
                 
-                // Close the window after printing
-                setTimeout(() => {
-                    printWindow.close();
-                }, 1000);
-            }, 500);
-            
-            // Show action buttons again
-            setTimeout(() => {
+                // Add spin animation
+                const style = document.createElement('style');
+                style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
+                document.head.appendChild(style);
+                
+                // Hide action buttons for clean capture
+                const actionButtons = document.querySelector('.action-buttons');
+                const originalDisplay = actionButtons.style.display;
+                actionButtons.style.display = 'none';
+                
+                // Set background to white for PDF
+                const body = document.body;
+                const container = document.querySelector('.container');
+                const wasDark = body.classList.contains('dark');
+                
+                // Temporarily switch to light mode for PDF
+                if (wasDark) {
+                    body.classList.remove('dark');
+                }
+                
+                // Get the container element
+                const element = container;
+                
+                // Configure html2canvas options for better quality
+                const canvas = await html2canvas(element, {
+                    scale: 2, // Higher resolution
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    width: element.scrollWidth,
+                    height: element.scrollHeight,
+                    scrollX: 0,
+                    scrollY: 0
+                });
+                
+                // Create PDF using jsPDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+                
+                // Calculate dimensions to fit A4
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 297; // A4 height in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                // Add image to PDF
+                const imgData = canvas.toDataURL('image/png');
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Add additional pages if content is too long
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // Generate filename with current date
+                const now = new Date();
+                const dateStr = now.toISOString().split('T')[0];
+                const filename = `AshwinRaj_UXDesigner_Resume_${dateStr}.pdf`;
+                
+                // Download the PDF
+                pdf.save(filename);
+                
+                // Restore original state
+                actionButtons.style.display = originalDisplay;
+                if (wasDark) {
+                    body.classList.add('dark');
+                }
+                
+                // Restore button
+                downloadBtn.innerHTML = originalHTML;
+                downloadBtn.style.pointerEvents = 'auto';
+                
+                // Remove the style element
+                document.head.removeChild(style);
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Sorry, there was an error generating the PDF. Please try again.');
+                
+                // Restore button on error
+                const downloadBtn = document.querySelector('.download-btn');
+                downloadBtn.innerHTML = '<svg class="download-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 15.577l-3.539-3.538 1.061-1.061L11.5 13v-8h1v8l2.015-2.015 1.061 1.061L12 15.577zM5.5 20v-4.5h1V19h11v-3.5h1V20h-13z"/></svg>';
+                downloadBtn.style.pointerEvents = 'auto';
+                
+                // Restore action buttons
+                const actionButtons = document.querySelector('.action-buttons');
                 actionButtons.style.display = 'flex';
-            }, 1000);
+            }
         }
 
         // Initialize time and update every minute
