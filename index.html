@@ -119,62 +119,21 @@
         }
         
         .download-btn {
-            background-color: #0073e6;
-            color: white;
+            background-color: #f5f5f5;
+            color: #666;
         }
         
         .download-btn:hover {
-            background-color: #005bb5;
+            background-color: #e8e8e8;
         }
         
         body.dark .download-btn {
-            background-color: #0066cc;
-            color: white;
+            background-color: #3a3a3a;
+            color: #ccc;
         }
         
         body.dark .download-btn:hover {
-            background-color: #0052a3;
-        }
-        
-        /* Tooltip styles */
-        .btn-tooltip {
-            position: absolute;
-            bottom: 120%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .btn-tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 5px solid transparent;
-            border-top-color: #333;
-        }
-        
-        .btn:hover .btn-tooltip {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        body.dark .btn-tooltip {
-            background-color: #555;
-        }
-        
-        body.dark .btn-tooltip::after {
-            border-top-color: #555;
+            background-color: #4a4a4a;
         }
         
         .header {
@@ -312,6 +271,8 @@
             color: #e0e0e0;
         }
         
+
+        
         .experience-item {
             margin-bottom: 20px;
         }
@@ -415,32 +376,6 @@
             color: #0073e6;
             text-decoration: underline;
         }
-
-        /* Download notification */
-        .download-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #0073e6;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 115, 230, 0.3);
-        }
-        
-        .download-notification.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        body.dark .download-notification {
-            background-color: #0066cc;
-        }
         
         @media (max-width: 768px) {
             .header {
@@ -505,7 +440,7 @@
                 margin: 0 !important;
                 padding: 20px !important;
             }
-            .action-buttons, .download-notification {
+            .action-buttons {
                 display: none !important;
             }
             .header {
@@ -525,10 +460,6 @@
     </style>
 </head>
 <body>
-    <div class="download-notification" id="downloadNotification">
-        💾 Click "Save as PDF" in the print dialog to download your resume
-    </div>
-    
     <div class="container">
         <div class="sticky-header">
         </div>
@@ -570,11 +501,9 @@
                     </div>
                     <button class="btn theme-btn" onclick="toggleTheme()">
                         ☀
-                        <div class="btn-tooltip">Toggle Dark Mode</div>
                     </button>
                     <button class="btn download-btn" onclick="downloadResume()">
-                        📄
-                        <div class="btn-tooltip">Download as PDF</div>
+                        📥
                     </button>
                 </div>
             </div>
@@ -787,37 +716,25 @@
             body.classList.toggle('dark');
             
             if (body.classList.contains('dark')) {
-                themeBtn.innerHTML = '🌙<div class="btn-tooltip">Toggle Light Mode</div>';
+                themeBtn.innerHTML = '🌙';
             } else {
-                themeBtn.innerHTML = '☀<div class="btn-tooltip">Toggle Dark Mode</div>';
+                themeBtn.innerHTML = '☀';
             }
         }
 
-        // Download resume as PDF with better UX
+        // Download resume as PDF
         function downloadResume() {
-            const notification = document.getElementById('downloadNotification');
-            
-            // Show helpful notification
-            notification.classList.add('show');
-            
-            // Hide notification after 4 seconds
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 4000);
-            
             // Hide action buttons temporarily for clean PDF
             const actionButtons = document.querySelector('.action-buttons');
             actionButtons.style.display = 'none';
             
-            // Open print dialog
+            // Use browser's print functionality to save as PDF
+            window.print();
+            
+            // Show action buttons again after a delay
             setTimeout(() => {
-                window.print();
-                
-                // Show action buttons again after print dialog
-                setTimeout(() => {
-                    actionButtons.style.display = 'flex';
-                }, 500);
-            }, 100);
+                actionButtons.style.display = 'flex';
+            }, 1000);
         }
 
         // Initialize time and update every minute
