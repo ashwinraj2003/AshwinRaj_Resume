@@ -121,7 +121,6 @@
         .download-btn {
             background-color: #f5f5f5;
             color: #666;
-            font-size: 20px;
         }
         
         .download-btn:hover {
@@ -135,13 +134,6 @@
         
         body.dark .download-btn:hover {
             background-color: #4a4a4a;
-        }
-        
-        /* SVG icon for download button */
-        .download-icon {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
         }
         
         .header {
@@ -510,10 +502,8 @@
                     <button class="btn theme-btn" onclick="toggleTheme()">
                         ☀
                     </button>
-                    <button class="btn download-btn" onclick="downloadResume()" title="Download Resume as PDF">
-                        <svg class="download-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 15.577l-3.539-3.538 1.061-1.061L11.5 13v-8h1v8l2.015-2.015 1.061 1.061L12 15.577zM5.5 20v-4.5h1V19h11v-3.5h1V20h-13z"/>
-                        </svg>
+                    <button class="btn download-btn" onclick="downloadResume()">
+                        📥
                     </button>
                 </div>
             </div>
@@ -698,10 +688,6 @@
         </div>
     </div>
 
-    <!-- Load jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
     <script>
         // Update time display
         function updateTime() {
@@ -737,161 +723,18 @@
         }
 
         // Download resume as PDF
-        async function downloadResume() {
-            try {
-                // Show loading state
-                const downloadBtn = document.querySelector('.download-btn');
-                const originalHTML = downloadBtn.innerHTML;
-                downloadBtn.innerHTML = '<div style="width: 18px; height: 18px; border: 2px solid #ccc; border-top: 2px solid #666; border-radius: 50%; animation: spin 1s linear infinite;"></div>';
-                downloadBtn.style.pointerEvents = 'none';
-                
-                // Add spin animation
-                const style = document.createElement('style');
-                style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-                document.head.appendChild(style);
-                
-                // Hide action buttons for clean capture
-                const actionButtons = document.querySelector('.action-buttons');
-                const originalDisplay = actionButtons.style.display;
-                actionButtons.style.display = 'none';
-                
-                // Set background to white for PDF and adjust layout
-                const body = document.body;
-                const container = document.querySelector('.container');
-                const wasDark = body.classList.contains('dark');
-                
-                // Store original styles
-                const originalBodyStyle = body.style.cssText;
-                const originalContainerStyle = container.style.cssText;
-                const originalContainerContentStyle = document.querySelector('.container-content').style.cssText;
-                
-                // Temporarily switch to light mode and A4 layout for PDF
-                if (wasDark) {
-                    body.classList.remove('dark');
-                }
-                
-                // Apply A4 sizing temporarily
-                body.style.cssText = `
-                    background-color: white !important;
-                    color: black !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                    font-family: Arial, sans-serif !important;
-                `;
-                
-                container.style.cssText = `
-                    max-width: 210mm !important;
-                    width: 210mm !important;
-                    min-height: 297mm !important;
-                    margin: 0 !important;
-                    padding: 20mm !important;
-                    background: white !important;
-                    box-shadow: none !important;
-                    border-radius: 0 !important;
-                    color: black !important;
-                    font-size: 12px !important;
-                    line-height: 1.4 !important;
-                `;
-                
-                document.querySelector('.container-content').style.padding = '0 !important';
-                
-                // Wait for layout to settle
-                await new Promise(resolve => setTimeout(resolve, 100));
-                
-                // Configure html2canvas for A4 dimensions
-                const canvas = await html2canvas(container, {
-                    scale: 3, // High resolution for crisp text
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: '#ffffff',
-                    width: 794, // A4 width in pixels at 96 DPI (210mm)
-                    height: 1123, // A4 height in pixels at 96 DPI (297mm)
-                    scrollX: 0,
-                    scrollY: 0,
-                    windowWidth: 794,
-                    windowHeight: 1123
-                });
-                
-                // Create PDF using jsPDF with exact A4 dimensions
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4',
-                    compress: true
-                });
-                
-                // A4 dimensions in mm
-                const pageWidth = 210;
-                const pageHeight = 297;
-                
-                // Convert canvas to image and add to PDF
-                const imgData = canvas.toDataURL('image/png', 1.0);
-                
-                // Calculate if we need multiple pages
-                const imgWidth = pageWidth;
-                const imgHeight = (canvas.height * pageWidth) / canvas.width;
-                
-                if (imgHeight <= pageHeight) {
-                    // Single page - center vertically if needed
-                    const yOffset = imgHeight < pageHeight ? (pageHeight - imgHeight) / 2 : 0;
-                    pdf.addImage(imgData, 'PNG', 0, yOffset, imgWidth, imgHeight, '', 'FAST');
-                } else {
-                    // Multiple pages needed
-                    let heightLeft = imgHeight;
-                    let position = 0;
-                    
-                    // Add first page
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
-                    heightLeft -= pageHeight;
-                    
-                    // Add additional pages
-                    while (heightLeft >= 0) {
-                        position = heightLeft - imgHeight;
-                        pdf.addPage();
-                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
-                        heightLeft -= pageHeight;
-                    }
-                }
-                
-                // Generate filename with current date
-                const now = new Date();
-                const dateStr = now.toISOString().split('T')[0];
-                const filename = `AshwinRaj_UXDesigner_Resume_${dateStr}.pdf`;
-                
-                // Download the PDF
-                pdf.save(filename);
-                
-                // Restore original styles
-                body.style.cssText = originalBodyStyle;
-                container.style.cssText = originalContainerStyle;
-                document.querySelector('.container-content').style.cssText = originalContainerContentStyle;
-                
-                actionButtons.style.display = originalDisplay;
-                if (wasDark) {
-                    body.classList.add('dark');
-                }
-                
-                // Restore button
-                downloadBtn.innerHTML = originalHTML;
-                downloadBtn.style.pointerEvents = 'auto';
-                
-                // Remove the style element
-                document.head.removeChild(style);
-                
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                alert('Sorry, there was an error generating the PDF. Please try again.');
-                
-                // Restore button on error
-                const downloadBtn = document.querySelector('.download-btn');
-                downloadBtn.innerHTML = '<svg class="download-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 15.577l-3.539-3.538 1.061-1.061L11.5 13v-8h1v8l2.015-2.015 1.061 1.061L12 15.577zM5.5 20v-4.5h1V19h11v-3.5h1V20h-13z"/></svg>';
-                downloadBtn.style.pointerEvents = 'auto';
-                
-                // Restore action buttons
-                const actionButtons = document.querySelector('.action-buttons');
+        function downloadResume() {
+            // Hide action buttons temporarily for clean PDF
+            const actionButtons = document.querySelector('.action-buttons');
+            actionButtons.style.display = 'none';
+            
+            // Use browser's print functionality to save as PDF
+            window.print();
+            
+            // Show action buttons again after a delay
+            setTimeout(() => {
                 actionButtons.style.display = 'flex';
-            }
+            }, 1000);
         }
 
         // Initialize time and update every minute
