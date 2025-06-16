@@ -755,58 +755,103 @@
                 const originalDisplay = actionButtons.style.display;
                 actionButtons.style.display = 'none';
                 
-                // Set background to white for PDF
+                // Set background to white for PDF and adjust layout
                 const body = document.body;
                 const container = document.querySelector('.container');
                 const wasDark = body.classList.contains('dark');
                 
-                // Temporarily switch to light mode for PDF
+                // Store original styles
+                const originalBodyStyle = body.style.cssText;
+                const originalContainerStyle = container.style.cssText;
+                const originalContainerContentStyle = document.querySelector('.container-content').style.cssText;
+                
+                // Temporarily switch to light mode and A4 layout for PDF
                 if (wasDark) {
                     body.classList.remove('dark');
                 }
                 
-                // Get the container element
-                const element = container;
+                // Apply A4 sizing temporarily
+                body.style.cssText = `
+                    background-color: white !important;
+                    color: black !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    font-family: Arial, sans-serif !important;
+                `;
                 
-                // Configure html2canvas options for better quality
-                const canvas = await html2canvas(element, {
-                    scale: 2, // Higher resolution
+                container.style.cssText = `
+                    max-width: 210mm !important;
+                    width: 210mm !important;
+                    min-height: 297mm !important;
+                    margin: 0 !important;
+                    padding: 20mm !important;
+                    background: white !important;
+                    box-shadow: none !important;
+                    border-radius: 0 !important;
+                    color: black !important;
+                    font-size: 12px !important;
+                    line-height: 1.4 !important;
+                `;
+                
+                document.querySelector('.container-content').style.padding = '0 !important';
+                
+                // Wait for layout to settle
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Configure html2canvas for A4 dimensions
+                const canvas = await html2canvas(container, {
+                    scale: 3, // High resolution for crisp text
                     useCORS: true,
                     allowTaint: true,
                     backgroundColor: '#ffffff',
-                    width: element.scrollWidth,
-                    height: element.scrollHeight,
+                    width: 794, // A4 width in pixels at 96 DPI (210mm)
+                    height: 1123, // A4 height in pixels at 96 DPI (297mm)
                     scrollX: 0,
-                    scrollY: 0
+                    scrollY: 0,
+                    windowWidth: 794,
+                    windowHeight: 1123
                 });
                 
-                // Create PDF using jsPDF
+                // Create PDF using jsPDF with exact A4 dimensions
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF({
                     orientation: 'portrait',
                     unit: 'mm',
-                    format: 'a4'
+                    format: 'a4',
+                    compress: true
                 });
                 
-                // Calculate dimensions to fit A4
-                const imgWidth = 210; // A4 width in mm
-                const pageHeight = 297; // A4 height in mm
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                // A4 dimensions in mm
+                const pageWidth = 210;
+                const pageHeight = 297;
                 
-                let heightLeft = imgHeight;
-                let position = 0;
+                // Convert canvas to image and add to PDF
+                const imgData = canvas.toDataURL('image/png', 1.0);
                 
-                // Add image to PDF
-                const imgData = canvas.toDataURL('image/png');
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
+                // Calculate if we need multiple pages
+                const imgWidth = pageWidth;
+                const imgHeight = (canvas.height * pageWidth) / canvas.width;
                 
-                // Add additional pages if content is too long
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                if (imgHeight <= pageHeight) {
+                    // Single page - center vertically if needed
+                    const yOffset = imgHeight < pageHeight ? (pageHeight - imgHeight) / 2 : 0;
+                    pdf.addImage(imgData, 'PNG', 0, yOffset, imgWidth, imgHeight, '', 'FAST');
+                } else {
+                    // Multiple pages needed
+                    let heightLeft = imgHeight;
+                    let position = 0;
+                    
+                    // Add first page
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
                     heightLeft -= pageHeight;
+                    
+                    // Add additional pages
+                    while (heightLeft >= 0) {
+                        position = heightLeft - imgHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
+                        heightLeft -= pageHeight;
+                    }
                 }
                 
                 // Generate filename with current date
@@ -817,7 +862,11 @@
                 // Download the PDF
                 pdf.save(filename);
                 
-                // Restore original state
+                // Restore original styles
+                body.style.cssText = originalBodyStyle;
+                container.style.cssText = originalContainerStyle;
+                document.querySelector('.container-content').style.cssText = originalContainerContentStyle;
+                
                 actionButtons.style.display = originalDisplay;
                 if (wasDark) {
                     body.classList.add('dark');
