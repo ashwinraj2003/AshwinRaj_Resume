@@ -380,17 +380,26 @@
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
-                text-align: center;
+                text-align: left; /* Changed from center to left */
             }
             
             .header-left {
                 flex-direction: column;
-                align-items: center;
+                align-items: flex-start; /* Changed from center to flex-start */
                 margin-bottom: 15px;
+                width: 100%;
             }
             
             .profile-pic {
-                margin: 0 auto 15px auto;
+                margin: 0 0 15px 0; /* Changed from centered to left-aligned */
+            }
+            
+            .header-info {
+                text-align: left; /* Ensure header info is left-aligned */
+            }
+            
+            .header-info .role {
+                flex-wrap: wrap; /* Allow role and badge to wrap on mobile */
             }
             
             .contact-info {
@@ -400,32 +409,59 @@
             }
             
             .action-buttons {
-                justify-content: center;
+                justify-content: flex-start; /* Changed from center to flex-start */
                 gap: 10px;
-            }
-            
-            .experience-header {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .education-item {
-                flex-direction: column;
-                gap: 5px;
+                width: 100%;
             }
             
             .time-display {
                 font-size: 12px;
+                text-align: left; /* Changed from right to left */
             }
             
             .time-display .time {
                 font-size: 14px;
             }
             
+            .experience-header {
+                flex-direction: column;
+                gap: 5px;
+                align-items: flex-start; /* Ensure left alignment */
+            }
+            
+            .education-item {
+                flex-direction: column;
+                gap: 5px;
+                align-items: flex-start; /* Ensure left alignment */
+            }
+            
             .btn {
                 width: 35px;
                 height: 35px;
                 font-size: 14px;
+            }
+            
+            /* Additional mobile-specific left-alignment rules */
+            .summary {
+                text-align: left;
+            }
+            
+            .section h2 {
+                text-align: left;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr !important; /* Stack skills in single column on mobile */
+            }
+            
+            .languages-list {
+                text-align: left;
+            }
+            
+            /* Ensure all text content is left-aligned on mobile */
+            .job-description,
+            .project-description {
+                text-align: left;
             }
         }
         
@@ -471,24 +507,24 @@
                     <div class="header-info">
                         <h1>Ashwin Raj</h1>
                         <p class="role">
-                            User Experience Designer 
+                            UX Desinger | Product Desinger
                             <span class="status-badge">Open to Opportunities</span>
                         </p>
                         <div class="contact-info">
                             <div class="contact-item">
-                                <span class="contact-label">Email:</span>
-                                <a href="mailto:ashwinrajeev2003@gmail.com">ashwinrajeev2003@gmail.com</a>
-                            </div>
-                            <div class="contact-item">
-                                <span class="contact-label">Phone:</span>
-                                <a href="tel:+919496455088">9496455088</a>
-                            </div>
-                            <div class="contact-item">
-                                <span class="contact-label">Portfolio:</span>
+                                <span class="contact-label"><b>Portfolio:</b></span>
                                 <a href="https://ashwinraj.framer.website/">ashwinraj.framer.website</a>
                             </div>
                             <div class="contact-item">
-                                <span class="contact-label">LinkedIn:</span>
+                                <span class="contact-label"><b>Phone:</b></span>
+                                <a href="tel:+919496455088">9496455088</a>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-label"><b>Email:</b></span>
+                                <a href="mailto:ashwinrajeev2003@gmail.com">ashwinrajeev2003@gmail.com</a>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-label"><b>LinkedIn:</b></span>
                                 <a href="http://www.linkedin.com/in/ashwin-raj-">linkedin.com/in/ashwin-raj-</a>
                             </div>
                         </div>
