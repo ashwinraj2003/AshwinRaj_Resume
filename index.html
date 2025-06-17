@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ashwin Raj | UX Designer </title>
+    <title>Ashwin Raj | UX Designer</title>
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @page {
             size: A4;
@@ -181,6 +184,10 @@
             gap: 8px;
         }
         
+        body.dark .header-info .role {
+            color: #ccc;
+        }
+        
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -213,6 +220,10 @@
             line-height: 1.4;
         }
         
+        body.dark .contact-info {
+            color: #ccc;
+        }
+        
         .contact-info .contact-item {
             display: flex;
             align-items: center;
@@ -231,6 +242,10 @@
         
         .contact-info a:hover {
             text-decoration: underline;
+        }
+        
+        body.dark .contact-info a {
+            color: #66b3ff;
         }
         
         .summary {
@@ -255,6 +270,7 @@
         
         .section {
             margin: 25px 0;
+            page-break-inside: avoid;
         }
         
         .section h2 {
@@ -265,16 +281,16 @@
             display: flex;
             align-items: center;
             transition: color 0.3s ease;
+            page-break-after: avoid;
         }
         
         body.dark .section h2 {
             color: #e0e0e0;
         }
         
-
-        
         .experience-item {
             margin-bottom: 20px;
+            page-break-inside: avoid;
         }
         
         .experience-header {
@@ -300,10 +316,18 @@
             color: #666;
         }
         
+        body.dark .company {
+            color: #ccc;
+        }
+        
         .date {
             font-size: 12px;
             color: #666;
             white-space: nowrap;
+        }
+        
+        body.dark .date {
+            color: #ccc;
         }
         
         .job-description {
@@ -311,6 +335,10 @@
             color: #666;
             margin-top: 5px;
             line-height: 1.4;
+        }
+        
+        body.dark .job-description {
+            color: #ccc;
         }
         
         .job-description ul {
@@ -327,6 +355,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
+            page-break-inside: avoid;
         }
         
         .education-info {
@@ -347,6 +376,10 @@
         .education-info .school {
             font-size: 12px;
             color: #666;
+        }
+        
+        body.dark .education-info .school {
+            color: #ccc;
         }
         
         .project-item {
@@ -371,35 +404,76 @@
             line-height: 1.4;
         }
         
+        body.dark .project-description {
+            color: #ccc;
+        }
+        
         .project-link {
             font-size: 11px;
             color: #0073e6;
             text-decoration: underline;
         }
         
+        body.dark .project-link {
+            color: #66b3ff;
+        }
+        
+        .skills-grid {
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 15px; 
+            font-size: 12px; 
+            color: #666;
+        }
+        
+        body.dark .skills-grid {
+            color: #ccc;
+        }
+        
+        .skills-column ul {
+            margin: 0; 
+            padding-left: 15px; 
+            line-height: 1.6;
+        }
+        
+        .languages-list {
+            font-size: 12px; 
+            color: #666; 
+            line-height: 1.6;
+        }
+        
+        body.dark .languages-list {
+            color: #ccc;
+        }
+        
+        .languages-list ul {
+            margin: 0; 
+            padding-left: 15px;
+        }
+        
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
-                text-align: left; /* Changed from center to left */
+                text-align: left;
             }
             
             .header-left {
                 flex-direction: column;
-                align-items: flex-start; /* Changed from center to flex-start */
+                align-items: flex-start;
                 margin-bottom: 15px;
                 width: 100%;
             }
             
             .profile-pic {
-                margin: 0 0 15px 0; /* Changed from centered to left-aligned */
+                margin: 0 0 15px 0;
             }
             
             .header-info {
-                text-align: left; /* Ensure header info is left-aligned */
+                text-align: left;
             }
             
             .header-info .role {
-                flex-wrap: wrap; /* Allow role and badge to wrap on mobile */
+                flex-wrap: wrap;
             }
             
             .contact-info {
@@ -409,14 +483,14 @@
             }
             
             .action-buttons {
-                justify-content: flex-start; /* Changed from center to flex-start */
+                justify-content: flex-start;
                 gap: 10px;
                 width: 100%;
             }
             
             .time-display {
                 font-size: 12px;
-                text-align: left; /* Changed from right to left */
+                text-align: left;
             }
             
             .time-display .time {
@@ -426,13 +500,13 @@
             .experience-header {
                 flex-direction: column;
                 gap: 5px;
-                align-items: flex-start; /* Ensure left alignment */
+                align-items: flex-start;
             }
             
             .education-item {
                 flex-direction: column;
                 gap: 5px;
-                align-items: flex-start; /* Ensure left alignment */
+                align-items: flex-start;
             }
             
             .btn {
@@ -441,7 +515,6 @@
                 font-size: 14px;
             }
             
-            /* Additional mobile-specific left-alignment rules */
             .summary {
                 text-align: left;
             }
@@ -451,14 +524,13 @@
             }
             
             .skills-grid {
-                grid-template-columns: 1fr !important; /* Stack skills in single column on mobile */
+                grid-template-columns: 1fr !important;
             }
             
             .languages-list {
                 text-align: left;
             }
             
-            /* Ensure all text content is left-aligned on mobile */
             .job-description,
             .project-description {
                 text-align: left;
@@ -492,6 +564,61 @@
             .job-title, .education-info .degree, .project-title {
                 color: black !important;
             }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+            
+            .section h2 {
+                page-break-after: avoid;
+            }
+            
+            .experience-item {
+                page-break-inside: avoid;
+                margin-bottom: 15px;
+            }
+            
+            .education-item {
+                page-break-inside: avoid;
+            }
+            
+            .section:not(:last-child) {
+                margin-bottom: 20px;
+            }
+        }
+        
+        /* PDF generation status indicator */
+        #pdf-status {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #pdf-status.loading {
+            display: flex;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -507,7 +634,7 @@
                     <div class="header-info">
                         <h1>Ashwin Raj</h1>
                         <p class="role">
-                            UX Desinger | Product Desinger
+                            UX Designer | Product Designer
                             <span class="status-badge">Open to Opportunities</span>
                         </p>
                         <div class="contact-info">
@@ -666,9 +793,9 @@
             <div class="section">
                 <h2>🛠 Skills</h2>
                 
-                <div class="skills-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; font-size: 12px; color: #666;">
+                <div class="skills-grid">
                     <div class="skills-column">
-                        <ul style="margin: 0; padding-left: 15px; line-height: 1.6;">
+                        <ul>
                             <li>User Research</li>
                             <li>Information Architecture</li>
                             <li>Wireframing</li>
@@ -681,7 +808,7 @@
                         </ul>
                     </div>
                     <div class="skills-column">
-                        <ul style="margin: 0; padding-left: 15px; line-height: 1.6;">
+                        <ul>
                             <li>Interaction Design</li>
                             <li>High-Fidelity Design</li>
                             <li>Mobile-First Design</li>
@@ -694,7 +821,7 @@
                         </ul>
                     </div>
                     <div class="skills-column">
-                        <ul style="margin: 0; padding-left: 15px; line-height: 1.6;">
+                        <ul>
                             <li>Cross-Functional Communication</li>
                             <li>Collaboration</li>
                             <li>Client Presentations</li>
@@ -712,8 +839,8 @@
             <div class="section">
                 <h2>🗣 Languages</h2>
                 
-                <div class="languages-list" style="font-size: 12px; color: #666; line-height: 1.6;">
-                    <ul style="margin: 0; padding-left: 15px;">
+                <div class="languages-list">
+                    <ul>
                         <li>Malayalam: Native Proficiency</li>
                         <li>English: Professional Proficiency</li>
                         <li>Hindi: Professional Proficiency</li>
@@ -722,6 +849,11 @@
                 </div>
             </div>
         </div>
+    </div>
+    
+    <div id="pdf-status">
+        <div class="spinner"></div>
+        <span>Generating PDF...</span>
     </div>
 
     <script>
@@ -753,29 +885,109 @@
             
             if (body.classList.contains('dark')) {
                 themeBtn.innerHTML = '🌙';
+                // Store theme preference
+                localStorage.setItem('theme', 'dark');
             } else {
                 themeBtn.innerHTML = '☀';
+                localStorage.setItem('theme', 'light');
             }
         }
 
         // Download resume as PDF
         function downloadResume() {
-            // Hide action buttons temporarily for clean PDF
-            const actionButtons = document.querySelector('.action-buttons');
-            actionButtons.style.display = 'none';
+            const downloadBtn = document.querySelector('.download-btn');
+            const originalText = downloadBtn.innerHTML;
             
-            // Use browser's print functionality to save as PDF
-            window.print();
+            // Show loading state
+            downloadBtn.innerHTML = '⏳';
+            const pdfStatus = document.getElementById('pdf-status');
+            pdfStatus.classList.add('loading');
             
-            // Show action buttons again after a delay
-            setTimeout(() => {
-                actionButtons.style.display = 'flex';
-            }, 1000);
+            // Store current theme and set to light for PDF generation
+            const body = document.body;
+            const isDark = body.classList.contains('dark');
+            body.classList.remove('dark');
+            
+            // Get the container element
+            const element = document.querySelector('.container');
+            
+            // Use html2canvas to capture the container as an image
+            html2canvas(element, {
+                scale: 2, // Higher scale for better quality
+                backgroundColor: "#FFFFFF", // Ensure white background
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                // Restore theme immediately after capturing
+                if (isDark) {
+                    body.classList.add('dark');
+                }
+                
+                // Create PDF using jsPDF
+                const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = pdf.internal.pageSize.getWidth();
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                let position = 0;
+                let pageCount = 0;
+                
+                // Add first page
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                position -= pdf.internal.pageSize.getHeight();
+                pageCount++;
+                
+                // Add additional pages if needed
+                while (position > -imgHeight) {
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    position -= pdf.internal.pageSize.getHeight();
+                    pageCount++;
+                }
+                
+                // Save the PDF
+                pdf.save('Ashwin_Raj_Resume.pdf');
+                
+                // Restore button and hide status
+                downloadBtn.innerHTML = '✅';
+                pdfStatus.classList.remove('loading');
+                
+                // Revert button to original state after 2 seconds
+                setTimeout(() => {
+                    downloadBtn.innerHTML = originalText;
+                }, 2000);
+            }).catch(error => {
+                console.error('Error generating PDF:', error);
+                // Restore theme if there was an error
+                if (isDark) {
+                    body.classList.add('dark');
+                }
+                downloadBtn.innerHTML = '❌';
+                pdfStatus.classList.remove('loading');
+                
+                // Revert button after 2 seconds
+                setTimeout(() => {
+                    downloadBtn.innerHTML = originalText;
+                }, 2000);
+            });
         }
 
-        // Initialize time and update every minute
-        updateTime();
-        setInterval(updateTime, 60000);
+        // Initialize the page
+        function init() {
+            // Load saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+                document.querySelector('.theme-btn').innerHTML = '🌙';
+            }
+            
+            // Update time immediately and then every second
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        // Run initialization when page loads
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
