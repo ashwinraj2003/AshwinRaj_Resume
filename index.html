@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ashwin Raj | UX Designer</title>
-    <!-- Include jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>Ashwin Raj | UX Designer </title>
     <style>
         @page {
             size: A4;
@@ -184,10 +181,6 @@
             gap: 8px;
         }
         
-        body.dark .header-info .role {
-            color: #ccc;
-        }
-        
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -220,10 +213,6 @@
             line-height: 1.4;
         }
         
-        body.dark .contact-info {
-            color: #ccc;
-        }
-        
         .contact-info .contact-item {
             display: flex;
             align-items: center;
@@ -242,10 +231,6 @@
         
         .contact-info a:hover {
             text-decoration: underline;
-        }
-        
-        body.dark .contact-info a {
-            color: #66b3ff;
         }
         
         .summary {
@@ -270,7 +255,6 @@
         
         .section {
             margin: 25px 0;
-            page-break-inside: avoid;
         }
         
         .section h2 {
@@ -281,16 +265,23 @@
             display: flex;
             align-items: center;
             transition: color 0.3s ease;
-            page-break-after: avoid;
         }
         
         body.dark .section h2 {
             color: #e0e0e0;
         }
         
+        .section h2::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background-color: #666;
+            border-radius: 2px;
+            margin-right: 8px;
+        }
+        
         .experience-item {
             margin-bottom: 20px;
-            page-break-inside: avoid;
         }
         
         .experience-header {
@@ -316,18 +307,10 @@
             color: #666;
         }
         
-        body.dark .company {
-            color: #ccc;
-        }
-        
         .date {
             font-size: 12px;
             color: #666;
             white-space: nowrap;
-        }
-        
-        body.dark .date {
-            color: #ccc;
         }
         
         .job-description {
@@ -335,10 +318,6 @@
             color: #666;
             margin-top: 5px;
             line-height: 1.4;
-        }
-        
-        body.dark .job-description {
-            color: #ccc;
         }
         
         .job-description ul {
@@ -355,7 +334,6 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            page-break-inside: avoid;
         }
         
         .education-info {
@@ -376,10 +354,6 @@
         .education-info .school {
             font-size: 12px;
             color: #666;
-        }
-        
-        body.dark .education-info .school {
-            color: #ccc;
         }
         
         .project-item {
@@ -404,76 +378,50 @@
             line-height: 1.4;
         }
         
-        body.dark .project-description {
-            color: #ccc;
-        }
-        
         .project-link {
             font-size: 11px;
             color: #0073e6;
             text-decoration: underline;
         }
-        
-        body.dark .project-link {
-            color: #66b3ff;
+
+        .error-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ff4444;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            z-index: 1000;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
         }
-        
-        .skills-grid {
-            display: grid; 
-            grid-template-columns: 1fr 1fr 1fr; 
-            gap: 15px; 
-            font-size: 12px; 
-            color: #666;
+
+        .error-message.show {
+            transform: translateX(0);
+            opacity: 1;
         }
-        
-        body.dark .skills-grid {
-            color: #ccc;
-        }
-        
-        .skills-column ul {
-            margin: 0; 
-            padding-left: 15px; 
-            line-height: 1.6;
-        }
-        
-        .languages-list {
-            font-size: 12px; 
-            color: #666; 
-            line-height: 1.6;
-        }
-        
-        body.dark .languages-list {
-            color: #ccc;
-        }
-        
-        .languages-list ul {
-            margin: 0; 
-            padding-left: 15px;
+
+        .error-message.success {
+            background-color: #22c55e;
         }
         
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
-                text-align: left;
+                text-align: center;
             }
             
             .header-left {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: center;
                 margin-bottom: 15px;
-                width: 100%;
             }
             
             .profile-pic {
-                margin: 0 0 15px 0;
-            }
-            
-            .header-info {
-                text-align: left;
-            }
-            
-            .header-info .role {
-                flex-wrap: wrap;
+                margin: 0 auto 15px auto;
             }
             
             .contact-info {
@@ -483,57 +431,32 @@
             }
             
             .action-buttons {
-                justify-content: flex-start;
+                justify-content: center;
                 gap: 10px;
-                width: 100%;
+            }
+            
+            .experience-header {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .education-item {
+                flex-direction: column;
+                gap: 5px;
             }
             
             .time-display {
                 font-size: 12px;
-                text-align: left;
             }
             
             .time-display .time {
                 font-size: 14px;
             }
             
-            .experience-header {
-                flex-direction: column;
-                gap: 5px;
-                align-items: flex-start;
-            }
-            
-            .education-item {
-                flex-direction: column;
-                gap: 5px;
-                align-items: flex-start;
-            }
-            
             .btn {
                 width: 35px;
                 height: 35px;
                 font-size: 14px;
-            }
-            
-            .summary {
-                text-align: left;
-            }
-            
-            .section h2 {
-                text-align: left;
-            }
-            
-            .skills-grid {
-                grid-template-columns: 1fr !important;
-            }
-            
-            .languages-list {
-                text-align: left;
-            }
-            
-            .job-description,
-            .project-description {
-                text-align: left;
             }
         }
         
@@ -564,61 +487,6 @@
             .job-title, .education-info .degree, .project-title {
                 color: black !important;
             }
-            
-            .section {
-                page-break-inside: avoid;
-            }
-            
-            .section h2 {
-                page-break-after: avoid;
-            }
-            
-            .experience-item {
-                page-break-inside: avoid;
-                margin-bottom: 15px;
-            }
-            
-            .education-item {
-                page-break-inside: avoid;
-            }
-            
-            .section:not(:last-child) {
-                margin-bottom: 20px;
-            }
-        }
-        
-        /* PDF generation status indicator */
-        #pdf-status {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        #pdf-status.loading {
-            display: flex;
-        }
-        
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 3px solid #fff;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -634,24 +502,24 @@
                     <div class="header-info">
                         <h1>Ashwin Raj</h1>
                         <p class="role">
-                            UX Designer | Product Designer
+                            User Experience Designer 
                             <span class="status-badge">Open to Opportunities</span>
                         </p>
                         <div class="contact-info">
                             <div class="contact-item">
-                                <span class="contact-label"><b>Portfolio:</b></span>
-                                <a href="https://ashwinraj.framer.website/">ashwinraj.framer.website</a>
-                            </div>
-                            <div class="contact-item">
-                                <span class="contact-label"><b>Phone:</b></span>
-                                <a href="tel:+919496455088">9496455088</a>
-                            </div>
-                            <div class="contact-item">
-                                <span class="contact-label"><b>Email:</b></span>
+                                <span class="contact-label">Email:</span>
                                 <a href="mailto:ashwinrajeev2003@gmail.com">ashwinrajeev2003@gmail.com</a>
                             </div>
                             <div class="contact-item">
-                                <span class="contact-label"><b>LinkedIn:</b></span>
+                                <span class="contact-label">Phone:</span>
+                                <a href="tel:+919496455088">9496455088</a>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-label">Portfolio:</span>
+                                <a href="https://ashwinraj.framer.website/">ashwin-raj.com</a>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-label">LinkedIn:</span>
                                 <a href="http://www.linkedin.com/in/ashwin-raj-">linkedin.com/in/ashwin-raj-</a>
                             </div>
                         </div>
@@ -663,7 +531,7 @@
                         <div class="date" id="current-date">Sunday</div>
                     </div>
                     <button class="btn theme-btn" onclick="toggleTheme()">
-                        ☀
+                        ☀️
                     </button>
                     <button class="btn download-btn" onclick="downloadResume()">
                         📥
@@ -791,11 +659,11 @@
             </div>
 
             <div class="section">
-                <h2>🛠 Skills</h2>
+                <h2>🛠️ Skills</h2>
                 
-                <div class="skills-grid">
+                <div class="skills-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; font-size: 12px; color: #666;">
                     <div class="skills-column">
-                        <ul>
+                        <ul style="margin: 0; padding-left: 15px; line-height: 1.6;">
                             <li>User Research</li>
                             <li>Information Architecture</li>
                             <li>Wireframing</li>
@@ -808,7 +676,7 @@
                         </ul>
                     </div>
                     <div class="skills-column">
-                        <ul>
+                        <ul style="margin: 0; padding-left: 15px; line-height: 1.6;">
                             <li>Interaction Design</li>
                             <li>High-Fidelity Design</li>
                             <li>Mobile-First Design</li>
@@ -821,7 +689,7 @@
                         </ul>
                     </div>
                     <div class="skills-column">
-                        <ul>
+                        <ul style="margin: 0; padding-left: 15px; line-height: 1.6;">
                             <li>Cross-Functional Communication</li>
                             <li>Collaboration</li>
                             <li>Client Presentations</li>
@@ -837,10 +705,10 @@
             </div>
 
             <div class="section">
-                <h2>🗣 Languages</h2>
+                <h2>🗣️ Languages</h2>
                 
-                <div class="languages-list">
-                    <ul>
+                <div class="languages-list" style="font-size: 12px; color: #666; line-height: 1.6;">
+                    <ul style="margin: 0; padding-left: 15px;">
                         <li>Malayalam: Native Proficiency</li>
                         <li>English: Professional Proficiency</li>
                         <li>Hindi: Professional Proficiency</li>
@@ -850,11 +718,12 @@
             </div>
         </div>
     </div>
-    
-    <div id="pdf-status">
-        <div class="spinner"></div>
-        <span>Generating PDF...</span>
-    </div>
+
+    <!-- Error/Success Message -->
+    <div id="message" class="error-message"></div>
+
+    <!-- Hidden file input for local file access -->
+    <input type="file" id="fileInput" accept=".pdf" style="display: none;" />
 
     <script>
         // Update time display
@@ -885,109 +754,117 @@
             
             if (body.classList.contains('dark')) {
                 themeBtn.innerHTML = '🌙';
-                // Store theme preference
-                localStorage.setItem('theme', 'dark');
             } else {
-                themeBtn.innerHTML = '☀';
-                localStorage.setItem('theme', 'light');
+                themeBtn.innerHTML = '☀️';
             }
         }
 
-        // Download resume as PDF
+        // Show message function
+        function showMessage(text, isSuccess = false) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `error-message ${isSuccess ? 'success' : ''} show`;
+            
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // Download resume functionality
         function downloadResume() {
-            const downloadBtn = document.querySelector('.download-btn');
-            const originalText = downloadBtn.innerHTML;
-            
-            // Show loading state
-            downloadBtn.innerHTML = '⏳';
-            const pdfStatus = document.getElementById('pdf-status');
-            pdfStatus.classList.add('loading');
-            
-            // Store current theme and set to light for PDF generation
-            const body = document.body;
-            const isDark = body.classList.contains('dark');
-            body.classList.remove('dark');
-            
-            // Get the container element
-            const element = document.querySelector('.container');
-            
-            // Use html2canvas to capture the container as an image
-            html2canvas(element, {
-                scale: 2, // Higher scale for better quality
-                backgroundColor: "#FFFFFF", // Ensure white background
-                useCORS: true,
-                logging: false
-            }).then(canvas => {
-                // Restore theme immediately after capturing
-                if (isDark) {
-                    body.classList.add('dark');
-                }
-                
-                // Create PDF using jsPDF
-                const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = pdf.internal.pageSize.getWidth();
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                
-                let position = 0;
-                let pageCount = 0;
-                
-                // Add first page
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                position -= pdf.internal.pageSize.getHeight();
-                pageCount++;
-                
-                // Add additional pages if needed
-                while (position > -imgHeight) {
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    position -= pdf.internal.pageSize.getHeight();
-                    pageCount++;
-                }
-                
-                // Save the PDF
-                pdf.save('Ashwin_Raj_Resume.pdf');
-                
-                // Restore button and hide status
-                downloadBtn.innerHTML = '✅';
-                pdfStatus.classList.remove('loading');
-                
-                // Revert button to original state after 2 seconds
-                setTimeout(() => {
-                    downloadBtn.innerHTML = originalText;
-                }, 2000);
-            }).catch(error => {
-                console.error('Error generating PDF:', error);
-                // Restore theme if there was an error
-                if (isDark) {
-                    body.classList.add('dark');
-                }
-                downloadBtn.innerHTML = '❌';
-                pdfStatus.classList.remove('loading');
-                
-                // Revert button after 2 seconds
-                setTimeout(() => {
-                    downloadBtn.innerHTML = originalText;
-                }, 2000);
-            });
+            // First, let's check if the PDF file actually exists
+            fetch('./AshwinRaj_Resume.pdf')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`PDF not found (${response.status})`);
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Verify it's actually a PDF
+                    if (blob.type !== 'application/pdf' && blob.size === 0) {
+                        throw new Error('File is not a valid PDF or is empty');
+                    }
+                    
+                    // Create download link with the actual PDF data
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'AshwinRaj_Resume.pdf';
+                    link.style.display = 'none';
+                    
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Clean up the URL object
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                    
+                    showMessage('PDF downloaded successfully!', true);
+                })
+                .catch(error => {
+                    console.error('Download failed:', error);
+                    
+                    if (error.message.includes('PDF not found')) {
+                        showMessage('PDF file not found. Please ensure "AshwinRaj_Resume.pdf" is in the same directory as this HTML file.');
+                    } else {
+                        showMessage('Download failed: ' + error.message);
+                    }
+                    
+                    // Show instructions for manual setup
+                    setTimeout(() => {
+                        showMessage('Alternative: Click the button again to select your PDF file manually.');
+                    }, 3500);
+                });
         }
 
-        // Initialize the page
-        function init() {
-            // Load saved theme preference
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark');
-                document.querySelector('.theme-btn').innerHTML = '🌙';
+        // Handle file selection (fallback method)
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.type === 'application/pdf') {
+                    // Create a download link with the selected file
+                    const url = URL.createObjectURL(file);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = file.name;
+                    link.click();
+                    
+                    // Clean up
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                    showMessage('PDF downloaded successfully!', true);
+                } else {
+                    showMessage('Please select a valid PDF file.');
+                }
             }
-            
-            // Update time immediately and then every second
-            updateTime();
-            setInterval(updateTime, 1000);
+        });
+
+        // Add double-click functionality for manual file selection
+        document.querySelector('.download-btn').addEventListener('dblclick', function(e) {
+            e.stopPropagation();
+            showMessage('Please select your PDF file...', true);
+            document.getElementById('fileInput').click();
+        });
+
+        // Add a setup helper function
+        function showSetupInstructions() {
+            const instructions = `
+To fix the PDF download:
+
+1. COPY your PDF file "AshwinRaj_Resume.pdf" to the same folder as this HTML file
+2. Make sure the file name is exactly "AshwinRaj_Resume.pdf" 
+3. Refresh this page and try downloading again
+
+OR
+
+Double-click the download button to manually select your PDF file.
+            `;
+            alert(instructions);
         }
 
-        // Run initialization when page loads
-        document.addEventListener('DOMContentLoaded', init);
+        // Initialize time and update every minute
+        updateTime();
+        setInterval(updateTime, 60000);
     </script>
 </body>
 </html>
