@@ -943,82 +943,50 @@
 
         // Download resume as PDF
         function downloadResume() {
-            const downloadBtn = document.querySelector('.download-btn');
-            const originalText = downloadBtn.innerHTML;
+    const downloadBtn = document.querySelector('.download-btn');
+    const originalText = downloadBtn.innerHTML;
+    
+    // Show loading state with animation
+    downloadBtn.innerHTML = '⏳';
+    const pdfStatus = document.getElementById('pdf-status');
+    pdfStatus.classList.add('loading');
+    
+    // Use relative path to the PDF in the same folder
+    const pdfUrl = './AshwinRaj_Resume.pdf';
+    
+    // Simulate loading for better UX
+    setTimeout(() => {
+        try {
+            // Create download link
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = 'Ashwin_Raj_Resume.pdf';
             
-            // Show loading state
-            downloadBtn.innerHTML = '⏳';
-            const pdfStatus = document.getElementById('pdf-status');
-            pdfStatus.classList.add('loading');
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
             
-            // Store current theme and set to light for PDF generation
-            const body = document.body;
-            const isDark = body.classList.contains('dark');
-            body.classList.remove('dark');
+            // Show success state
+            downloadBtn.innerHTML = '✅';
+            pdfStatus.classList.remove('loading');
             
-            // Get the container element
-            const element = document.querySelector('.container');
+            // Revert button after 2 seconds
+            setTimeout(() => {
+                downloadBtn.innerHTML = originalText;
+            }, 2000);
             
-            // Use html2canvas to capture the container as an image
-            html2canvas(element, {
-                scale: 2, // Higher scale for better quality
-                backgroundColor: "#FFFFFF", // Ensure white background
-                useCORS: true,
-                logging: false
-            }).then(canvas => {
-                // Restore theme immediately after capturing
-                if (isDark) {
-                    body.classList.add('dark');
-                }
-                
-                // Create PDF using jsPDF
-                const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = pdf.internal.pageSize.getWidth();
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                
-                let position = 0;
-                let pageCount = 0;
-                
-                // Add first page
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                position -= pdf.internal.pageSize.getHeight();
-                pageCount++;
-                
-                // Add additional pages if needed
-                while (position > -imgHeight) {
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    position -= pdf.internal.pageSize.getHeight();
-                    pageCount++;
-                }
-                
-                // Save the PDF
-                pdf.save('Ashwin_Raj_Resume.pdf');
-                
-                // Restore button and hide status
-                downloadBtn.innerHTML = '✅';
-                pdfStatus.classList.remove('loading');
-                
-                // Revert button to original state after 2 seconds
-                setTimeout(() => {
-                    downloadBtn.innerHTML = originalText;
-                }, 2000);
-            }).catch(error => {
-                console.error('Error generating PDF:', error);
-                // Restore theme if there was an error
-                if (isDark) {
-                    body.classList.add('dark');
-                }
-                downloadBtn.innerHTML = '❌';
-                pdfStatus.classList.remove('loading');
-                
-                // Revert button after 2 seconds
-                setTimeout(() => {
-                    downloadBtn.innerHTML = originalText;
-                }, 2000);
-            });
+        } catch (error) {
+            console.error('Download failed:', error);
+            downloadBtn.innerHTML = '❌';
+            pdfStatus.classList.remove('loading');
+            
+            setTimeout(() => {
+                downloadBtn.innerHTML = originalText;
+            }, 2000);
         }
+    }, 1500);
+}
 
         // Initialize the page
         function init() {
